@@ -3,7 +3,7 @@
 
 import UIKit
 
-/// ViewController
+/// Экран Каталога фильмов
 class ListFilmsController: UIViewController {
     // MARK: - Constants
 
@@ -13,7 +13,7 @@ class ListFilmsController: UIViewController {
     }
 
     private var filmsNetwork: [FilmsCommonInfo]?
-    private let networkService = NetworkService()
+    // private let networkService = NetworkService()
     private let gradientsLayer = CAGradientLayer()
 
     // MARK: - Visual Components
@@ -37,43 +37,52 @@ class ListFilmsController: UIViewController {
         return collecctionView
     }()
 
+    // MARK: - Private Properties
+
+    // private var viewModel = ListFilmViewModel()
+    private var viewModel: ListFilmViewModel?
+
+    // MARK: - Initializers
+
+    init(viewModels: ListFilmViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        // viewModel = ListFilmViewModel()
+        viewModel = viewModels
+        viewModel?.updateView = { [weak self] state in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch state {
+                case let .success(films):
+                    self.filmsNetwork = films
+                    self.collecctionView.reloadData()
+                case .initial, .failure, .loading:
+                    break
+                }
+            }
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel?.fetchFilms()
         setupGradient()
         configureUI()
-        parseFilms()
         setupTitleLabelConstraits()
         configureCollecctionView()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        // print(filmsNetwork?.count)
-    }
-
     // MARK: - Private Methods
-
-    func parseFilms() {
-        networkService.getFilms(completion: { [weak self] result in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case let .success(films):
-                    self.filmsNetwork = films
-                    self.collecctionView.reloadData()
-                    print(self.filmsNetwork?.count)
-                case .failure:
-                    break
-                }
-            }
-        })
-    }
 
     private func setupGradient() {
         view.layer.addSublayer(gradientsLayer)
         gradientsLayer.frame = view.bounds
-        gradientsLayer.colors = [UIColor.orange.cgColor, UIColor.blue.cgColor]
+        gradientsLayer.colors = [UIColor.cream.cgColor, UIColor.darkGreen.cgColor]
     }
 
     private func configureUI() {
@@ -135,4 +144,11 @@ extension ListFilmsController: UICollectionViewDataSource {
 
 // MARK: - ListFilmsController + UICollectionViewDelegate
 
-extension ListFilmsController: UICollectionViewDelegate {}
+extension ListFilmsController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel?.transitionToDetailsFilm(for: indexPath)
+
+//        let detailsFilmController = DetailsFilmViewController()
+//        navigationController?.pushViewController(detailsFilmController, animated: true)
+    }
+}

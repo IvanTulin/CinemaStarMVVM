@@ -57,7 +57,7 @@ class FilmCell: UICollectionViewCell {
     func setupCell(filmsNetwork: FilmsCommonInfo) {
         posterImageView.downloaded(from: filmsNetwork.poster)
         nameFilm.text = filmsNetwork.name
-        ratingFilm.text = "\(filmsNetwork.rating)"
+        ratingFilm.text = "⭐️ \(filmsNetwork.rating)"
     }
 
     // MARK: - Private Methods

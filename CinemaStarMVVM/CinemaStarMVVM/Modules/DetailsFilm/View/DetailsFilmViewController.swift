@@ -3,11 +3,12 @@
 
 import UIKit
 
-///
+/// Экран деталей фильма
 class DetailsFilmViewController: UIViewController {
     // MARK: - Constants
 
     enum Constants {
+        static let posterAndRatingIdentifier = "posterAndRatingIdentifier"
         static let detailedDescriptionIdentifier = "detailedDescriptionIdentifier"
         static let castAndCrewIdentifier = "castAndCrewIdentifier"
         static let recommendationIdentifier = "recommendationIdentifier"
@@ -15,6 +16,8 @@ class DetailsFilmViewController: UIViewController {
 
     /// Тип данных
     enum InforantionType {
+        /// постер и рейтинг фильма
+        case posterAndRating
         /// подробное описание
         case detailedDescription
         /// актеры и сьемочная группа
@@ -23,29 +26,67 @@ class DetailsFilmViewController: UIViewController {
         case recommendation
     }
 
-    let informationType: [InforantionType] = [.detailedDescription, .castAndCrew, .recommendation]
+    let informationType: [InforantionType] = [.posterAndRating, .detailedDescription, .castAndCrew, .recommendation]
 
     // MARK: - Visual Components
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .green
+        tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(
+            PosterAndRatingCell.self,
+            forCellReuseIdentifier: Constants.posterAndRatingIdentifier
+        )
         tableView.register(
             DetailedDescriptionCell.self,
             forCellReuseIdentifier: Constants.detailedDescriptionIdentifier
         )
-        tableView.register(CastAndCrewCell.self, forCellReuseIdentifier: Constants.castAndCrewIdentifier)
+        tableView.register(CastAndCrewTableViewCell.self, forCellReuseIdentifier: Constants.castAndCrewIdentifier)
         tableView.register(RecommendationCell.self, forCellReuseIdentifier: Constants.recommendationIdentifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
 
+    // MARK: - Private Properties
+
+//    private var filmsNetwork: FilmsCommonInfo?
+    private var detailsFilmNetwork: DetailsFilmCommonInfo?
+    private var viewModel: DetailsFilmViewModel?
+
+    // MARK: - Initializers
+
+    init(viewModels: DetailsFilmViewModel, index: IndexPath) {
+        super.init(nibName: nil, bundle: nil)
+        viewModel = viewModels
+        viewModel?.updateView = { state in
+            DispatchQueue.main.async {
+                switch state {
+                case let .success(detailsFilm):
+                    self.detailsFilmNetwork = detailsFilm[index.row]
+                    self.tableView.reloadData()
+                case .initial, .failure, .loading:
+                    break
+                }
+            }
+        }
+    }
+
+//    init(filmsNetwork: FilmsCommonInfo) {
+//        super.init(nibName: nil, bundle: nil)
+//        self.filmsNetwork = filmsNetwork
+//    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel?.fetchDetailsFilm()
         configureUI()
         setupTableViewConstraint()
     }
@@ -72,23 +113,39 @@ class DetailsFilmViewController: UIViewController {
 
 extension DetailsFilmViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        informationType.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch informationType[indexPath.row] {
+        case .posterAndRating:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: Constants.posterAndRatingIdentifier,
+                for: indexPath
+            ) as? PosterAndRatingCell else { return UITableViewCell() }
+            cell.backgroundColor = .red
+//            if let detailsFilm = filmsNetwork {
+//                cell.confifureCell(filmsNetwork: detailsFilm)
+//            }
+            if let detailsFilm = detailsFilmNetwork {
+                cell.confifureCell(detailsFilmsNetwork: detailsFilm)
+            }
+            return cell
         case .detailedDescription:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: Constants.detailedDescriptionIdentifier,
                 for: indexPath
             ) as? DetailedDescriptionCell else { return UITableViewCell() }
-            cell.backgroundColor = .red
+            cell.backgroundColor = .gray
+            if let detailsFilm = detailsFilmNetwork {
+                cell.confifureCell(detailsFilmsNetwork: detailsFilm)
+            }
             return cell
         case .castAndCrew:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: Constants.castAndCrewIdentifier,
                 for: indexPath
-            ) as? CastAndCrewCell else { return UITableViewCell() }
+            ) as? CastAndCrewTableViewCell else { return UITableViewCell() }
             cell.backgroundColor = .systemBlue
             return cell
         case .recommendation:
@@ -107,13 +164,15 @@ extension DetailsFilmViewController: UITableViewDataSource {
 extension DetailsFilmViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch informationType[indexPath.row] {
+        case .posterAndRating:
+            return 300
         case .detailedDescription:
-            return 350
+            return 145
         case .castAndCrew:
-            return 80
+            return 170
         case .recommendation:
             // return UITableView.automaticDimension
-            return 200
+            return 270
         }
     }
 }
