@@ -17,6 +17,8 @@ class PosterAndRatingCell: UITableViewCell {
     private let posterImageView: UIImageView = {
         let poster = UIImageView()
         poster.backgroundColor = .systemBlue
+        poster.contentMode = .scaleAspectFill
+        poster.clipsToBounds = true
         poster.layer.cornerRadius = 8
         poster.translatesAutoresizingMaskIntoConstraints = false
         return poster
@@ -43,15 +45,20 @@ class PosterAndRatingCell: UITableViewCell {
         return label
     }()
 
-    private let startViewingButton: UIButton = {
+    private lazy var startViewingButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .darkGreen
         button.setTitle("Смотреть", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 12
+        button.addTarget(self, action: #selector(showAlert), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+
+    // MARK: - Puplic Properties
+
+    var completionHandler: VoidHandler?
 
     // MARK: - Initializers
 
@@ -76,14 +83,9 @@ class PosterAndRatingCell: UITableViewCell {
     func confifureCell(detailsFilmsNetwork: DetailsFilmCommonInfo) {
         posterImageView.downloaded(from: detailsFilmsNetwork.poster)
         nameFilmLabel.text = detailsFilmsNetwork.name
-        ratingLabel.text = "⭐️ \(detailsFilmsNetwork.rating)"
+        let rating = String(format: "%.1f", detailsFilmsNetwork.rating.kp)
+        ratingLabel.text = "⭐️ \(rating)"
     }
-
-//    func confifureCell(filmsNetwork: FilmsCommonInfo) {
-//        posterImageView.downloaded(from: filmsNetwork.poster)
-//        nameFilmLabel.text = filmsNetwork.name
-//        ratingLabel.text = "⭐️ \(filmsNetwork.rating)"
-//    }
 
     // MARK: - Private Methods
 
@@ -127,5 +129,9 @@ class PosterAndRatingCell: UITableViewCell {
             startViewingButton.widthAnchor.constraint(equalToConstant: 358),
             startViewingButton.heightAnchor.constraint(equalToConstant: 48)
         ])
+    }
+
+    @objc private func showAlert() {
+        completionHandler?()
     }
 }

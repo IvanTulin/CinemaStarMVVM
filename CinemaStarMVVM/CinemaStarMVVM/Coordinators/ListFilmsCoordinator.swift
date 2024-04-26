@@ -36,8 +36,8 @@ final class ListFilmsCoordinator: BaseCoordinator {
         rootController?.pushViewController(listFilmsController, animated: true)
     }
 
-    func showDetailsFilm(index: IndexPath) {
-        let detailsFilmsController = AppBuilder.makeDetailsFilmModule(index: index)
+    func showDetailsFilm(id: Int) {
+        let detailsFilmsController = AppBuilder.makeDetailsFilmModule(id: id)
         rootController?.pushViewController(detailsFilmsController, animated: true)
     }
 

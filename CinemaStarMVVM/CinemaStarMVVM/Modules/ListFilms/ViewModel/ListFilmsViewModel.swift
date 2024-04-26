@@ -6,48 +6,52 @@ import Foundation
 protocol ListFilmViewModelProtocol {
     var updateView: ((StateView) -> ())? { get set }
     func fetchFilms()
-    func transitionToDetailsFilm(for indexPath: IndexPath)
+    func transitionToDetailsFilm(id: Int)
 }
 
 final class ListFilmViewModel: ListFilmViewModelProtocol {
     var updateView: ((StateView) -> ())?
     var networkService: NetworkServiceProtocol?
     var filmsNetwork: [FilmsCommonInfo]?
-    // var detailsFilmNetwork: [DetailsFilmCommonInfo]?
     weak var listFilmsCoordinator: ListFilmsCoordinator?
+    private var listFilmResource = QuestionsResource()
+    private var apiRequest: APIRequest<QuestionsResource>?
 
     init(listFilmsCoordinator: ListFilmsCoordinator, networkService: NetworkService) {
-        updateView?(.initial)
         self.listFilmsCoordinator = listFilmsCoordinator
         self.networkService = networkService
+        updateView?(.initial)
     }
 
     func fetchFilms() {
-        networkService?.getFilms { [weak self] result in
+        apiRequest = APIRequest(resource: listFilmResource)
+        apiRequest?.execute { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case let .success(films):
-                self.updateView?(.success(films))
-                self.filmsNetwork = films
-            case .failure:
-                self.updateView?(.failure)
+            case .none:
+                break
+            case let .some(film):
+                let listFilm = film.docs.map { FilmsCommonInfo(dto: $0) }
+                self.updateView?(.success(listFilm))
             }
         }
-    }
 
-    func transitionToDetailsFilm(for indexPath: IndexPath) {
-//        guard let detailsFilm = detailsFilmNetwork?[indexPath.item] else { return }
-
-        if let listFilmCoordinator = listFilmsCoordinator {
-            listFilmCoordinator.showDetailsFilm(index: indexPath)
-        }
-    }
-
-//    func transitionToDetailsFilm(for indexPath: IndexPath) {
-//        guard let films = filmsNetwork?[indexPath.item] else { return }
-//
-//        if let listFilmCoordinator = listFilmsCoordinator {
-//            listFilmCoordinator.showDetailsFilm(filmsNetwork: films)
+//        networkService?.getFilms { [weak self] result in
+//            guard let self = self else { return }
+//            switch result {
+//            case let .success(films):
+//                self.updateView?(.success(films))
+//                self.filmsNetwork = films
+//            case .failure:
+//                self.updateView?(.failure)
+//            }
 //        }
-//    }
+    }
+
+    func transitionToDetailsFilm(id: Int) {
+//        if let listFilmCoordinator = listFilmsCoordinator {
+//            listFilmCoordinator.showDetailsFilm(id: id)
+//        }
+        listFilmsCoordinator?.showDetailsFilm(id: id)
+    }
 }

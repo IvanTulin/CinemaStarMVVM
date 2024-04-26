@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo _: UISceneSession,
         options _: UIScene.ConnectionOptions
     ) {
-        guard let winndowScene = (scene as? UIWindowScene) else { return }
+//        guard let winndowScene = (scene as? UIWindowScene) else { return }
 //        window = UIWindow(windowScene: winndowScene)
 //        let detailsFilmViewController = DetailsFilmViewController()
 //        window?.rootViewController = detailsFilmViewController

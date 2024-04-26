@@ -8,7 +8,7 @@ protocol BuilderProtocol {
     /// создаем экран Выбора фильмов
     static func makeListFilmModule(listFilmsCoordinator: ListFilmsCoordinator) -> ListFilmsController
     /// создаем экран Деталей фильма
-    static func makeDetailsFilmModule(index: IndexPath) -> DetailsFilmViewController
+    static func makeDetailsFilmModule(id: Int) -> DetailsFilmViewController
 
 //    static func makeDetailsFilmModule(filmsNetwork: FilmsCommonInfo) -> DetailsFilmViewController
 }
@@ -22,10 +22,10 @@ final class AppBuilder: BuilderProtocol {
         return view
     }
 
-    static func makeDetailsFilmModule(index: IndexPath) -> DetailsFilmViewController {
+    static func makeDetailsFilmModule(id: Int) -> DetailsFilmViewController {
         let networkService = NetworkService()
-        let viewModel = DetailsFilmViewModel(networkService: networkService)
-        let view = DetailsFilmViewController(viewModels: viewModel, index: index)
+        let viewModel = DetailsFilmViewModel(networkService: networkService, id: id)
+        let view = DetailsFilmViewController(viewModels: viewModel)
         return view
     }
 

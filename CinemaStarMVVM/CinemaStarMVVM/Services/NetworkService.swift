@@ -5,20 +5,11 @@ import Foundation
 
 protocol NetworkServiceProtocol: AnyObject {
     func getFilms(completion: @escaping (Result<[FilmsCommonInfo], Error>) -> Void)
-    func getDetailsFilms(completion: @escaping (Result<[DetailsFilmCommonInfo], Error>) -> Void)
+    func getDetailsFilms(id: String, completion: @escaping (Result<DetailsFilmCommonInfo, Error>) -> Void)
 }
 
 final class NetworkService {
-    private let baseUrlComponents = {
-        var component = URLComponents()
-        component.scheme = "https"
-        component.host = "api.kinopoisk.dev"
-        component.path = "/v1.4/movie/search"
-        component.queryItems = [
-            .init(name: "query", value: "История")
-        ]
-        return component
-    }()
+    var requestCreator = RequestCreator()
 
     private func makeURLRequest<T: Codable>(_ request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
         let task = URLSession.shared.dataTask(with: request) { data, _, error in
@@ -41,9 +32,7 @@ final class NetworkService {
 
 extension NetworkService: NetworkServiceProtocol {
     func getFilms(completion: @escaping (Result<[FilmsCommonInfo], Error>) -> Void) {
-        guard let url = baseUrlComponents.url else { return }
-        var request = URLRequest(url: url)
-        request.setValue("3KC34TK-XP1MZB5-MRFJWCB-3T8HV4P", forHTTPHeaderField: "X-API-KEY")
+        guard let request = requestCreator.createFilmRequest() else { return }
 
         makeURLRequest(request) { (result: Result<CinemaStarDTO, Error>) in
             switch result {
@@ -56,15 +45,14 @@ extension NetworkService: NetworkServiceProtocol {
         }
     }
 
-    func getDetailsFilms(completion: @escaping (Result<[DetailsFilmCommonInfo], Error>) -> Void) {
-        guard let url = baseUrlComponents.url else { return }
-        var request = URLRequest(url: url)
-        request.setValue("3KC34TK-XP1MZB5-MRFJWCB-3T8HV4P", forHTTPHeaderField: "X-API-KEY")
+    func getDetailsFilms(id: String, completion: @escaping (Result<DetailsFilmCommonInfo, Error>) -> Void) {
+        guard let request = requestCreator.createDetailsFilmRequest(id: id) else { return }
 
-        makeURLRequest(request) { (result: Result<CinemaStarDTO, Error>) in
+        makeURLRequest(request) { (result: Result<DetailsFilmDTO, Error>) in
             switch result {
             case let .success(response):
-                let film = response.docs.map { DetailsFilmCommonInfo(dto: $0) }
+//                let film = response.map { DetailsFilmCommonInfo(dto: $0) }
+                let film = DetailsFilmCommonInfo(dto: response)
                 completion(.success(film))
             case let .failure(error):
                 completion(.failure(error))

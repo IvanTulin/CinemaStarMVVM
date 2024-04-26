@@ -146,9 +146,8 @@ extension ListFilmsController: UICollectionViewDataSource {
 
 extension ListFilmsController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel?.transitionToDetailsFilm(for: indexPath)
-
-//        let detailsFilmController = DetailsFilmViewController()
-//        navigationController?.pushViewController(detailsFilmController, animated: true)
+        if let id = filmsNetwork?[indexPath.item].id {
+            viewModel?.transitionToDetailsFilm(id: id)
+        }
     }
 }

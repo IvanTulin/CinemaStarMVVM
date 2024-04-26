@@ -7,6 +7,6 @@ import Foundation
 enum DetailsFilmStateView {
     case initial
     case loading
-    case success([DetailsFilmCommonInfo])
+    case success(DetailsFilmCommonInfo)
     case failure
 }

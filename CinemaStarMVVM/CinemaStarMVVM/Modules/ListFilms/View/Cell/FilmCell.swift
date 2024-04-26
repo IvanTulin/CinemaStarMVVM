@@ -10,27 +10,23 @@ class FilmCell: UICollectionViewCell {
     private let posterImageView: UIImageView = {
         let image = UIImageView()
         image.backgroundColor = .systemBlue
-        image.layer.borderWidth = 2
+        image.contentMode = .scaleAspectFill
+        image.clipsToBounds = true
+        image.layer.cornerRadius = 8
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
 
     private let nameFilm: UILabel = {
         let label = UILabel()
-        // label.textColor = .white
-        // label.text = "name text"
         label.sizeToFit()
-        label.layer.borderWidth = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let ratingFilm: UILabel = {
         let label = UILabel()
-        // label.textColor = .white
-        // label.text = "⭐️ rating text"
         label.sizeToFit()
-        label.layer.borderWidth = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -57,7 +53,8 @@ class FilmCell: UICollectionViewCell {
     func setupCell(filmsNetwork: FilmsCommonInfo) {
         posterImageView.downloaded(from: filmsNetwork.poster)
         nameFilm.text = filmsNetwork.name
-        ratingFilm.text = "⭐️ \(filmsNetwork.rating)"
+        let rating = String(format: "%.1f", filmsNetwork.rating)
+        ratingFilm.text = "⭐️ \(rating)"
     }
 
     // MARK: - Private Methods
@@ -91,8 +88,6 @@ class FilmCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             ratingFilm.topAnchor.constraint(equalTo: nameFilm.bottomAnchor, constant: 4),
             ratingFilm.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-//            ratingFilm.widthAnchor.constraint(equalToConstant: 100),
-//            ratingFilm.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }
