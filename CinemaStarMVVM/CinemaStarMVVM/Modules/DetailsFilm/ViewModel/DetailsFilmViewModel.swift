@@ -6,17 +6,20 @@ import Foundation
 protocol DetailsFilmViewModelProtocol {
     var updateView: ((DetailsFilmStateView) -> ())? { get set }
     func fetchDetailsFilm()
+    var detailsFilmsNetwork: DetailsFilmCommonInfo? { get set }
+    var favoritesService: FavoritesService { get set }
 }
 
 final class DetailsFilmViewModel: DetailsFilmViewModelProtocol {
     // MARK: - Puplic Properties
 
     var updateView: ((DetailsFilmStateView) -> ())?
+    var detailsFilmsNetwork: DetailsFilmCommonInfo?
+    var favoritesService: FavoritesService = .init()
 
     // MARK: - Private Properties
 
     private var networkService: NetworkServiceProtocol?
-    private var detailsFilmsNetwork: DetailsFilmCommonInfo?
     private var id: Int
     private var detailsFilmResource = DetailsFilmResource()
     private var apiRequest: APIRequest<DetailsFilmResource>?

@@ -3,7 +3,7 @@
 
 import Foundation
 
-///
+/// Ресурс для  запроса CinemaStarDTO
 struct QuestionsResource: APIResourceProtocol {
     typealias ModelType = CinemaStarDTO
     var id: Int?

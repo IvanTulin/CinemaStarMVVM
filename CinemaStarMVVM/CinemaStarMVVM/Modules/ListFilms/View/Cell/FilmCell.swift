@@ -9,7 +9,6 @@ class FilmCell: UICollectionViewCell {
 
     private let posterImageView: UIImageView = {
         let image = UIImageView()
-        image.backgroundColor = .systemBlue
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.layer.cornerRadius = 8
@@ -19,6 +18,7 @@ class FilmCell: UICollectionViewCell {
 
     private let nameFilm: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -26,6 +26,7 @@ class FilmCell: UICollectionViewCell {
 
     private let ratingFilm: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.sizeToFit()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -77,8 +78,6 @@ class FilmCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             nameFilm.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 8),
             nameFilm.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-//            nameFilm.widthAnchor.constraint(equalToConstant: 100),
-//            nameFilm.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 

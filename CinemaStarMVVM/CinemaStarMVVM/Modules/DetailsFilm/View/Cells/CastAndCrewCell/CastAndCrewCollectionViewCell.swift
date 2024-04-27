@@ -3,7 +3,7 @@
 
 import UIKit
 
-///
+/// Ячейка коллекции актеров и сьемочной группы
 class CastAndCrewCollectionViewCell: UICollectionViewCell {
     // MARK: - Constants
 

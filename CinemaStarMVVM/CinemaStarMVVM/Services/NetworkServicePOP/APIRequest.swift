@@ -3,7 +3,7 @@
 
 import Foundation
 
-///
+/// Клас APIRequest для типа запроса
 class APIRequest<Resource: APIResourceProtocol> {
     let resource: Resource
 

@@ -17,6 +17,17 @@ class CastAndCrewTableViewCell: UITableViewCell {
 
     // MARK: - Visual Components
 
+    private let releaseDateLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .dirtyGreen
+        label.text = "2017/Россия/Сериал"
+        label.sizeToFit()
+        label.font = UIFont(name: Constants.nameFont, size: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.nameForTitleLabel
@@ -68,6 +79,7 @@ class CastAndCrewTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupReleaseDateLabelConstraint()
         setupTitleLabelConstraint()
         setupCollectionViewConstraint()
         setupLanguageLabelConstraint()
@@ -76,6 +88,7 @@ class CastAndCrewTableViewCell: UITableViewCell {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setupReleaseDateLabelConstraint()
         setupTitleLabelConstraint()
         setupCollectionViewConstraint()
         setupLanguageLabelConstraint()
@@ -91,6 +104,9 @@ class CastAndCrewTableViewCell: UITableViewCell {
         } else {
             nameLanguageLabel.text = detailsFilmsNetwork.spokenLanguages?.first?.name
         }
+        guard let description = detailsFilmsNetwork.countries.first?.name else { return }
+        releaseDateLabel
+            .text = "\(detailsFilmsNetwork.year)/ \(description)/ \(detailsFilmsNetwork.type)"
     }
 
     // MARK: - Private Methods
@@ -105,11 +121,20 @@ class CastAndCrewTableViewCell: UITableViewCell {
         return layout
     }
 
+    private func setupReleaseDateLabelConstraint() {
+        contentView.addSubview(releaseDateLabel)
+
+        NSLayoutConstraint.activate([
+            releaseDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            releaseDateLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
+        ])
+    }
+
     private func setupTitleLabelConstraint() {
         contentView.addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: releaseDateLabel.bottomAnchor, constant: 8),
             titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16)
         ])
     }
@@ -140,8 +165,6 @@ class CastAndCrewTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             nameLanguageLabel.topAnchor.constraint(equalTo: languageLabel.bottomAnchor, constant: 3),
             nameLanguageLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
-//            nameLanguageLabel.widthAnchor.constraint(equalToConstant: 57),
-//            nameLanguageLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 }

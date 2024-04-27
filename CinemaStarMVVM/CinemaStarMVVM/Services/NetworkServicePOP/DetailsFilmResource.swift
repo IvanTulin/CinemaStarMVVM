@@ -3,7 +3,7 @@
 
 import Foundation
 
-///
+/// Ресурс для  запроса DetailsFilmDTO
 struct DetailsFilmResource: APIResourceProtocol {
     typealias ModelType = DetailsFilmDTO
     var id: Int?

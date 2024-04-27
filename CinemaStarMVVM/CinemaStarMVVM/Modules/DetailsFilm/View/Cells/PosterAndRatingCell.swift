@@ -16,7 +16,6 @@ class PosterAndRatingCell: UITableViewCell {
 
     private let posterImageView: UIImageView = {
         let poster = UIImageView()
-        poster.backgroundColor = .systemBlue
         poster.contentMode = .scaleAspectFill
         poster.clipsToBounds = true
         poster.layer.cornerRadius = 8

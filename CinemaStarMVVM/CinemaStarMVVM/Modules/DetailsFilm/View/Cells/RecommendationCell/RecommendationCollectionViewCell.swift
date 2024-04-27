@@ -3,7 +3,7 @@
 
 import UIKit
 
-///
+///Ячейка коллекции фильмов-рекомендаций
 class RecommendationCollectionViewCell: UICollectionViewCell {
     // MARK: - Constants
 
@@ -15,7 +15,6 @@ class RecommendationCollectionViewCell: UICollectionViewCell {
 
     private let posterImageView: UIImageView = {
         let poster = UIImageView()
-        poster.backgroundColor = .systemBlue
         poster.contentMode = .scaleToFill
         poster.clipsToBounds = true
         poster.layer.cornerRadius = 8

@@ -9,8 +9,6 @@ protocol BuilderProtocol {
     static func makeListFilmModule(listFilmsCoordinator: ListFilmsCoordinator) -> ListFilmsController
     /// создаем экран Деталей фильма
     static func makeDetailsFilmModule(id: Int) -> DetailsFilmViewController
-
-//    static func makeDetailsFilmModule(filmsNetwork: FilmsCommonInfo) -> DetailsFilmViewController
 }
 
 /// Билдер
@@ -28,11 +26,4 @@ final class AppBuilder: BuilderProtocol {
         let view = DetailsFilmViewController(viewModels: viewModel)
         return view
     }
-
-//    static func makeDetailsFilmModule(filmsNetwork: FilmsCommonInfo) -> DetailsFilmViewController {
-//        let networkService = NetworkService()
-//        let viewModel = DetailsFilmViewModel(networkService: networkService)
-//        let view = DetailsFilmViewController(filmsNetwork: filmsNetwork)
-//        return view
-//    }
 }

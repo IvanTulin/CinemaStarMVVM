@@ -10,6 +10,7 @@ class ListFilmsController: UIViewController {
     enum Constants {
         static let textForTitleLabel = "Смотри исторические\nфильмы на CINEMA STAR"
         static let nameFont = "Inter"
+        static let shimmerCellIdentifier = "shimmerCellIdentifier"
     }
 
     private var filmsNetwork: [FilmsCommonInfo]?
@@ -32,6 +33,10 @@ class ListFilmsController: UIViewController {
         collecctionView.backgroundColor = .clear
         collecctionView.dataSource = self
         collecctionView.delegate = self
+        collecctionView.register(
+            ShimmerCollectionViewCell.self,
+            forCellWithReuseIdentifier: Constants.shimmerCellIdentifier
+        )
         collecctionView.register(FilmCell.self, forCellWithReuseIdentifier: "FilmImageCell")
         collecctionView.translatesAutoresizingMaskIntoConstraints = false
         return collecctionView
@@ -41,6 +46,7 @@ class ListFilmsController: UIViewController {
 
     // private var viewModel = ListFilmViewModel()
     private var viewModel: ListFilmViewModel?
+    private var isLoading = true
 
     // MARK: - Initializers
 
@@ -50,12 +56,17 @@ class ListFilmsController: UIViewController {
         viewModel = viewModels
         viewModel?.updateView = { [weak self] state in
             guard let self = self else { return }
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 switch state {
                 case let .success(films):
+                    self.isLoading = false
                     self.filmsNetwork = films
                     self.collecctionView.reloadData()
-                case .initial, .failure, .loading:
+                case .initial, .failure:
+                    break
+                // self.isLoading = true
+                // self.collecctionView.reloadData()
+                case .loading:
                     break
                 }
             }
@@ -125,20 +136,28 @@ class ListFilmsController: UIViewController {
 
 extension ListFilmsController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        filmsNetwork?.count ?? 2
+        isLoading ? 6 : filmsNetwork?.count ?? 2
     }
 
     func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        guard let cell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: "FilmImageCell", for: indexPath) as? FilmCell
-        else { return UICollectionViewCell() }
-        guard let films = filmsNetwork else { return cell }
-        cell.setupCell(filmsNetwork: films[indexPath.item])
+        if isLoading {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: Constants.shimmerCellIdentifier,
+                for: indexPath
+            ) as? ShimmerCollectionViewCell else { return UICollectionViewCell() }
+            return cell
+        } else {
+            guard let cell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: "FilmImageCell", for: indexPath) as? FilmCell
+            else { return UICollectionViewCell() }
+            guard let films = filmsNetwork else { return cell }
+            cell.setupCell(filmsNetwork: films[indexPath.item])
 
-        return cell
+            return cell
+        }
     }
 }
 

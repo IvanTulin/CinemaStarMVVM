@@ -3,8 +3,11 @@
 
 import Foundation
 
+/// Протокол APIResourceProtocol
 protocol APIResourceProtocol {
+    /// ассоциативный тип
     associatedtype ModelType: Decodable
+    /// параметры для path
     var methodPath: String { get }
 }
 

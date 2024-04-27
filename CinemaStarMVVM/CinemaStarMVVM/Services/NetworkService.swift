@@ -3,11 +3,23 @@
 
 import Foundation
 
+/// Протокол NetworkService
 protocol NetworkServiceProtocol: AnyObject {
+    ///  получаем данные для экрана ListFilms
+    /// - Parameters:
+    /// completion: клоужер для обработки результатов
+    /// - Returns: возращает ListFilms в случае успеха или ошибки в случае неудачи
     func getFilms(completion: @escaping (Result<[FilmsCommonInfo], Error>) -> Void)
+
+    ///  получаем данные для экрана Details
+    /// - Parameters:
+    /// id: id для параметров path
+    /// completion: клоужер для обработки результатов
+    /// - Returns: возращает ListFilms в случае успеха или ошибки в случае неудачи
     func getDetailsFilms(id: String, completion: @escaping (Result<DetailsFilmCommonInfo, Error>) -> Void)
 }
 
+/// NetworkService
 final class NetworkService {
     var requestCreator = RequestCreator()
 
@@ -29,6 +41,8 @@ final class NetworkService {
         task.resume()
     }
 }
+
+// MARK: - NetworkService + NetworkServiceProtocol
 
 extension NetworkService: NetworkServiceProtocol {
     func getFilms(completion: @escaping (Result<[FilmsCommonInfo], Error>) -> Void) {

@@ -40,9 +40,4 @@ final class ListFilmsCoordinator: BaseCoordinator {
         let detailsFilmsController = AppBuilder.makeDetailsFilmModule(id: id)
         rootController?.pushViewController(detailsFilmsController, animated: true)
     }
-
-//    func showDetailsFilm(filmsNetwork: FilmsCommonInfo) {
-//        let detailsFilmsController = AppBuilder.makeDetailsFilmModule(filmsNetwork: filmsNetwork)
-//        rootController?.pushViewController(detailsFilmsController, animated: true)
-//    }
 }

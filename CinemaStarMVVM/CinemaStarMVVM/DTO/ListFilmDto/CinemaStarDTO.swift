@@ -3,25 +3,25 @@
 
 import Foundation
 
-///
+/// Модель DTO для ListFilms
 struct CinemaStarDTO: Codable {
     let docs: [DocumentationDTO]
 }
 
-///
+/// Контейнер для docs
 struct DocumentationDTO: Codable {
     let id: Int
     let name: String
-    let poster: Poster
-    let rating: Rating
+    let poster: PosterDTO
+    let rating: RatingDTO
 }
 
-///
-struct Poster: Codable {
+/// Модель для PosterDTO
+struct PosterDTO: Codable {
     let url: String?
 }
 
-///
-struct Rating: Codable {
+/// Модель для RatingDTO
+struct RatingDTO: Codable {
     let kp: Double
 }

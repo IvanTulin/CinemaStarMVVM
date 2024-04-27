@@ -3,25 +3,39 @@
 
 import Foundation
 
+/// Протокол для ListFilmViewModel
 protocol ListFilmViewModelProtocol {
+    /// Rложура для передачи значений на View
     var updateView: ((StateView) -> ())? { get set }
+    /// Получить данные фильма
     func fetchFilms()
+    /// Переход на экран Деталей фильма
+    /// - Parameter id: id фильма
     func transitionToDetailsFilm(id: Int)
 }
 
 final class ListFilmViewModel: ListFilmViewModelProtocol {
+    // MARK: - Puplic Properties
+    
     var updateView: ((StateView) -> ())?
     var networkService: NetworkServiceProtocol?
     var filmsNetwork: [FilmsCommonInfo]?
     weak var listFilmsCoordinator: ListFilmsCoordinator?
+    
+    // MARK: - Private Properties
+    
     private var listFilmResource = QuestionsResource()
     private var apiRequest: APIRequest<QuestionsResource>?
+    
+    //MARK: - Initializers
 
-    init(listFilmsCoordinator: ListFilmsCoordinator, networkService: NetworkService) {
+    init(listFilmsCoordinator: ListFilmsCoordinator, networkService: NetworkServiceProtocol) {
         self.listFilmsCoordinator = listFilmsCoordinator
         self.networkService = networkService
         updateView?(.initial)
     }
+    
+    // MARK: - Public Methods
 
     func fetchFilms() {
         apiRequest = APIRequest(resource: listFilmResource)
@@ -49,9 +63,6 @@ final class ListFilmViewModel: ListFilmViewModelProtocol {
     }
 
     func transitionToDetailsFilm(id: Int) {
-//        if let listFilmCoordinator = listFilmsCoordinator {
-//            listFilmCoordinator.showDetailsFilm(id: id)
-//        }
         listFilmsCoordinator?.showDetailsFilm(id: id)
     }
 }

@@ -28,8 +28,5 @@ final class DetailsFilmCoordinator: BaseCoordinator {
         onFinishFlow?()
     }
 
-    func showDetailsFilm() {
-//        let detailsFilmsController = AppBuilder.makeDetailsFilmModule()
-//        rootController?.pushViewController(detailsFilmsController, animated: true)
-    }
+    func showDetailsFilm() {}
 }
