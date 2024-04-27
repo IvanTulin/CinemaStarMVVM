@@ -4,7 +4,7 @@
 import UIKit
 
 /// Ячейка шиммера для коллекции
-class ShimmerCollectionViewCell: UICollectionViewCell {
+final class ShimmerCollectionViewCell: UICollectionViewCell {
     // MARK: - Visual Components
 
     private let posterImageView: UIImageView = {

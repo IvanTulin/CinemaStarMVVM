@@ -4,7 +4,7 @@
 import UIKit
 
 ///Ячейка коллекции фильмов-рекомендаций
-class RecommendationCollectionViewCell: UICollectionViewCell {
+final class RecommendationCollectionViewCell: UICollectionViewCell {
     // MARK: - Constants
 
     enum Constants {

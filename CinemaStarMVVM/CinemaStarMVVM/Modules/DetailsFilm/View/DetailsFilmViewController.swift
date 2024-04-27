@@ -5,7 +5,7 @@ import UIKit
 
 // swiftlint:disable all
 /// Экран деталей фильма
-class DetailsFilmViewController: UIViewController {
+final class DetailsFilmViewController: UIViewController {
     // MARK: - Constants
 
     enum Constants {

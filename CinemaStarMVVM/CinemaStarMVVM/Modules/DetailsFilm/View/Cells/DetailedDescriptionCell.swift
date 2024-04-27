@@ -6,7 +6,7 @@ import UIKit
 // swiftlint:disable all
 
 /// Ячейка детального описания фильма
-class DetailedDescriptionCell: UITableViewCell {
+final class DetailedDescriptionCell: UITableViewCell {
     // MARK: - Constants
 
     enum Constants {

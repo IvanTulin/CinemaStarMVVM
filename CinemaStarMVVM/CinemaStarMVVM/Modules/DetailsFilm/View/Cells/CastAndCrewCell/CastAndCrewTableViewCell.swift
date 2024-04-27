@@ -4,7 +4,7 @@
 import UIKit
 
 /// Ячейка актеров и сьемочной группы
-class CastAndCrewTableViewCell: UITableViewCell {
+final class CastAndCrewTableViewCell: UITableViewCell {
     // MARK: - Constants
 
     enum Constants {

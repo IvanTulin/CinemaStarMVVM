@@ -4,7 +4,7 @@
 import UIKit
 
 // Ячейка фильма
-class FilmCell: UICollectionViewCell {
+final class FilmCell: UICollectionViewCell {
     // MARK: - Visual Components
 
     private let posterImageView: UIImageView = {

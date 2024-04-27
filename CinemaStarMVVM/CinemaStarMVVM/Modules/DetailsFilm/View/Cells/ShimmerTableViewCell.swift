@@ -4,7 +4,7 @@
 import UIKit
 
 /// Ячейка шиммера таблицы
-class ShimmerTableViewCell: UITableViewCell {
+final class ShimmerTableViewCell: UITableViewCell {
     private var gradientLayer: CAGradientLayer?
 
     // MARK: - Initializers

@@ -4,7 +4,7 @@
 import UIKit
 
 /// Экран Каталога фильмов
-class ListFilmsController: UIViewController {
+final class ListFilmsController: UIViewController {
     // MARK: - Constants
 
     enum Constants {

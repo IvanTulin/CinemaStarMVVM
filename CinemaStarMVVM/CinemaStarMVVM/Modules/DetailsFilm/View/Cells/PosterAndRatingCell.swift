@@ -4,7 +4,7 @@
 import UIKit
 
 /// Ячейка с постером и рейтингом фильма
-class PosterAndRatingCell: UITableViewCell {
+final class PosterAndRatingCell: UITableViewCell {
     // MARK: - Constants
 
     enum Constants {
