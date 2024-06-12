@@ -5,6 +5,7 @@ import UIKit
 
 /// SceneDelegate
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    private var appCoordinator: AppCoordinator?
     var window: UIWindow?
 
     func scene(
@@ -12,12 +13,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo _: UISceneSession,
         options _: UIScene.ConnectionOptions
     ) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene
-        // `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see
-        // `application:configurationForConnectingSceneSession` instead).
-        guard let winndowScene = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        creatScreen(windowScene)
+    }
+
+    func creatScreen(_ windowScene: UIWindowScene) {
+        window = UIWindow(windowScene: windowScene)
+        if let window {
+            window.makeKeyAndVisible()
+            appCoordinator = AppCoordinator()
+            appCoordinator?.start()
+        }
     }
 
     func sceneDidDisconnect(_: UIScene) {

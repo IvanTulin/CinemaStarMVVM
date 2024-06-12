@@ -1,0 +1,51 @@
+// DetailsFilmViewModel.swift
+// Copyright © RoadMap. All rights reserved.
+
+import Foundation
+
+protocol DetailsFilmViewModelProtocol {
+    var updateView: ((DetailsFilmStateView) -> ())? { get set }
+    func fetchDetailsFilm()
+    var detailsFilmsNetwork: DetailsFilmCommonInfo? { get set }
+    var favoritesService: FavoritesService { get set }
+}
+
+final class DetailsFilmViewModel: DetailsFilmViewModelProtocol {
+    // MARK: - Puplic Properties
+
+    var updateView: ((DetailsFilmStateView) -> ())?
+    var detailsFilmsNetwork: DetailsFilmCommonInfo?
+    var favoritesService: FavoritesService = .init()
+
+    // MARK: - Private Properties
+
+    private var networkService: NetworkServiceProtocol?
+    private var id: Int
+    private var detailsFilmResource = DetailsFilmResource()
+    private var apiRequest: APIRequest<DetailsFilmResource>?
+
+    // MARK: - Initializers
+
+    init(networkService: NetworkService, id: Int) {
+        self.networkService = networkService
+        self.id = id
+        updateView?(.initial)
+    }
+
+    // MARK: - Public Methods
+
+    func fetchDetailsFilm() {
+        detailsFilmResource.id = id
+        apiRequest = APIRequest(resource: detailsFilmResource)
+        apiRequest?.execute { [weak self] result in
+            switch result {
+            case .none:
+                break
+            case let .some(film):
+                let detailsFilm = DetailsFilmCommonInfo(dto: film)
+                self?.updateView?(.success(detailsFilm))
+            }
+        }
+
+    }
+}
