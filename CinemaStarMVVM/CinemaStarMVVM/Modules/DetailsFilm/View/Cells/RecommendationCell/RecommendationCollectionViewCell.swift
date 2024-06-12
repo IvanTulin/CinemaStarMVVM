@@ -3,7 +3,7 @@
 
 import UIKit
 
-///Ячейка коллекции фильмов-рекомендаций
+/// Ячейка коллекции фильмов-рекомендаций
 final class RecommendationCollectionViewCell: UICollectionViewCell {
     // MARK: - Constants
 

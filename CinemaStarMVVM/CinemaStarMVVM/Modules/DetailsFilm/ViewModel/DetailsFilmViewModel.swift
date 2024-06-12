@@ -47,14 +47,5 @@ final class DetailsFilmViewModel: DetailsFilmViewModelProtocol {
             }
         }
 
-//        networkService?.getDetailsFilms(id: id ?? "") { [weak self] result in
-//            guard let self = self else { return }
-//            switch result {
-//            case let .success(detailsFilms):
-//                self.updateView?(.success(detailsFilms))
-//            case .failure:
-//                self.updateView?(.failure)
-//            }
-//        }
     }
 }

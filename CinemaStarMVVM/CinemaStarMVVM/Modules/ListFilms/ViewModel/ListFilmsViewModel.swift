@@ -12,29 +12,37 @@ protocol ListFilmViewModelProtocol {
     /// Переход на экран Деталей фильма
     /// - Parameter id: id фильма
     func transitionToDetailsFilm(id: Int)
+    /// Cмена стейта
+    var state: StateView { get set }
 }
 
 final class ListFilmViewModel: ListFilmViewModelProtocol {
     // MARK: - Puplic Properties
-    
+
     var updateView: ((StateView) -> ())?
     var networkService: NetworkServiceProtocol?
     var filmsNetwork: [FilmsCommonInfo]?
     weak var listFilmsCoordinator: ListFilmsCoordinator?
-    
+
+    var state: StateView = .initial {
+        didSet {
+            updateView?(state)
+        }
+    }
+
     // MARK: - Private Properties
-    
+
     private var listFilmResource = QuestionsResource()
     private var apiRequest: APIRequest<QuestionsResource>?
-    
-    //MARK: - Initializers
+
+    // MARK: - Initializers
 
     init(listFilmsCoordinator: ListFilmsCoordinator, networkService: NetworkServiceProtocol) {
         self.listFilmsCoordinator = listFilmsCoordinator
         self.networkService = networkService
         updateView?(.initial)
     }
-    
+
     // MARK: - Public Methods
 
     func fetchFilms() {
@@ -49,17 +57,6 @@ final class ListFilmViewModel: ListFilmViewModelProtocol {
                 self.updateView?(.success(listFilm))
             }
         }
-
-//        networkService?.getFilms { [weak self] result in
-//            guard let self = self else { return }
-//            switch result {
-//            case let .success(films):
-//                self.updateView?(.success(films))
-//                self.filmsNetwork = films
-//            case .failure:
-//                self.updateView?(.failure)
-//            }
-//        }
     }
 
     func transitionToDetailsFilm(id: Int) {

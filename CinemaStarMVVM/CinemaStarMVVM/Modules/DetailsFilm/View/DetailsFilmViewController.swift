@@ -75,7 +75,7 @@ final class DetailsFilmViewController: UIViewController {
         viewModel = viewModels
         viewModel?.updateView = { [weak self] state in
             guard let self = self else { return }
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 switch state {
                 case let .success(detailsFilm):
                     self.isLoading = false
@@ -143,6 +143,7 @@ final class DetailsFilmViewController: UIViewController {
         favoriteButton.style = .plain
         favoriteButton.target = self
         favoriteButton.action = #selector(addFavorites)
+        backButtonItem.tintColor = .white
         navigationItem.rightBarButtonItem = favoriteButton
 
         backButtonItem.tintColor = .white
@@ -204,19 +205,24 @@ final class DetailsFilmViewController: UIViewController {
 
 extension DetailsFilmViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        informationType.count
+        if isLoading {
+            1
+        } else {
+            informationType.count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch informationType[indexPath.row] {
-        case .posterAndRating:
-            if isLoading {
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: Constants.shimmerCellIdentifier,
-                    for: indexPath
-                ) as? ShimmerTableViewCell else { return UITableViewCell() }
-                return cell
-            } else {
+        if isLoading {
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: Constants.shimmerCellIdentifier,
+                for: indexPath
+            ) as? ShimmerTableViewCell else { return UITableViewCell() }
+            cell.backgroundColor = .clear
+            return cell
+        } else {
+            switch informationType[indexPath.row] {
+            case .posterAndRating:
                 guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: Constants.posterAndRatingIdentifier,
                     for: indexPath
@@ -230,15 +236,8 @@ extension DetailsFilmViewController: UITableViewDataSource {
                     self.createAlertController()
                 }
                 return cell
-            }
-        case .detailedDescription:
-            if isLoading {
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: Constants.shimmerCellIdentifier,
-                    for: indexPath
-                ) as? ShimmerTableViewCell else { return UITableViewCell() }
-                return cell
-            } else {
+
+            case .detailedDescription:
                 guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: Constants.detailedDescriptionIdentifier,
                     for: indexPath
@@ -249,15 +248,8 @@ extension DetailsFilmViewController: UITableViewDataSource {
                     cell.confifureCell(detailsFilmsNetwork: detailsFilm)
                 }
                 return cell
-            }
-        case .castAndCrew:
-            if isLoading {
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: Constants.shimmerCellIdentifier,
-                    for: indexPath
-                ) as? ShimmerTableViewCell else { return UITableViewCell() }
-                return cell
-            } else {
+
+            case .castAndCrew:
                 guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: Constants.castAndCrewIdentifier,
                     for: indexPath
@@ -269,15 +261,8 @@ extension DetailsFilmViewController: UITableViewDataSource {
                     cell.collectionView.reloadData()
                 }
                 return cell
-            }
-        case .recommendation:
-            if isLoading {
-                guard let cell = tableView.dequeueReusableCell(
-                    withIdentifier: Constants.shimmerCellIdentifier,
-                    for: indexPath
-                ) as? ShimmerTableViewCell else { return UITableViewCell() }
-                return cell
-            } else {
+
+            case .recommendation:
                 guard let cell = tableView.dequeueReusableCell(
                     withIdentifier: Constants.recommendationIdentifier,
                     for: indexPath

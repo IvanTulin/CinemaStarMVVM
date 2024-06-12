@@ -44,7 +44,6 @@ final class ListFilmsController: UIViewController {
 
     // MARK: - Private Properties
 
-    // private var viewModel = ListFilmViewModel()
     private var viewModel: ListFilmViewModel?
     private var isLoading = true
 
@@ -52,11 +51,10 @@ final class ListFilmsController: UIViewController {
 
     init(viewModels: ListFilmViewModel) {
         super.init(nibName: nil, bundle: nil)
-        // viewModel = ListFilmViewModel()
         viewModel = viewModels
         viewModel?.updateView = { [weak self] state in
             guard let self = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 switch state {
                 case let .success(films):
                     self.isLoading = false
@@ -64,8 +62,6 @@ final class ListFilmsController: UIViewController {
                     self.collecctionView.reloadData()
                 case .initial, .failure:
                     break
-                // self.isLoading = true
-                // self.collecctionView.reloadData()
                 case .loading:
                     break
                 }
